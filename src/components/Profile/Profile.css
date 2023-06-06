@@ -1,0 +1,29 @@
+
+.ddd {
+    width:400px;
+    height:150px;
+    border:1px solid;
+    padding : 5px;
+    border-radius:10%;
+    position: absoulte;
+}
+
+.dddlx {
+    height:40px;
+    line-height:20px;
+    display : block;
+    padding : 10px;
+    border: 1px solid;
+    margin-top:4px;
+    margin-bottom:4px;
+}
+
+.ddlx {
+    width:100px;
+    text-align:right;
+}
+
+.profileCheck {
+    position: absoulte;
+    transform: translate(35%,10%);
+}
