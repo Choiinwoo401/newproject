@@ -27,7 +27,7 @@ const ToDoEdit = ({insertToggle, selectedTodo, onUpdate} ) => {
                 <input
                 onChange={onChange}
                 value={value}
-                placeholder="할 일을 입력하세요"
+                placeholder="무게를 입력하세요"
                 />
                 <button type="submit">수정하기</button>
             </form>
