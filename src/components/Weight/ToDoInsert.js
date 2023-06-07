@@ -11,6 +11,12 @@ const ToDoInsert = ({ onInsert }) => {
 
   const onSubmit = useCallback(
     (e) => {
+      e.preventDefault();
+
+      if (value.trim() === '') {
+        return; // Don't insert if the input value is empty or contains only whitespace
+      }
+
       const currentDate = new Date();
       const year = currentDate.getFullYear();
       const month = currentDate.getMonth() + 1; // Adding 1 because month is zero-based
@@ -18,7 +24,6 @@ const ToDoInsert = ({ onInsert }) => {
 
       onInsert(value, year, month, day);
       setValue('');
-      e.preventDefault();
     },
     [onInsert, value]
   );

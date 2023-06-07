@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 import '../components/Calendar/styles/Diary.scss';
 import moment from 'moment/moment.js';
 import { useRef, useState } from 'react';
@@ -25,43 +25,54 @@ const Diary = () => {
   const [days, setDays] = useState([]);
 
   return (
-    <div>
-      <CalendarContext.Provider
-        value={{
-          events,
-          setEvents,
-          date,
-          setDate,
-          days,
-          setDays,
-          clicked,
-          setClicked
-        }}
-      >
-        <div className="wrapper">
-          <Header
-            quickActive={quickActive}
-            setQuickActive={setQuickActive}
-            searchActive={searchActive}
-            setSearchActive={setSearchActive}
-          />
+    <div className="diary-container">
+      <div className="header-wrapper">
+        <Header
+          quickActive={quickActive}
+          setQuickActive={setQuickActive}
+          searchActive={searchActive}
+          setSearchActive={setSearchActive}
+        />
+      </div>
 
-          <Main
-            eventRef={eventRef}
-            viewRef={viewRef}
-            modalActive={modalActive}
-            setModalActive={setModalActive}
-          />
+      <div className="content-wrapper">
+        <CalendarContext.Provider
+          value={{
+            events,
+            setEvents,
+            date,
+            setDate,
+            days,
+            setDays,
+            clicked,
+            setClicked
+          }}
+        >
+          <div className="calendar-wrapper">
+            <Main
+              eventRef={eventRef}
+              viewRef={viewRef}
+              modalActive={modalActive}
+              setModalActive={setModalActive}
+            />
 
-          <Modal active={modalActive} setActive={setModalActive}>
-            <EventPopup ref={eventRef} modalActive={modalActive} setModalActive={setModalActive} />
-            <ViewPopup ref={viewRef} setModalActive={setModalActive} />
-          </Modal>
+            <Modal active={modalActive} setActive={setModalActive}>
+              <EventPopup
+                ref={eventRef}
+                modalActive={modalActive}
+                setModalActive={setModalActive}
+              />
+              <ViewPopup ref={viewRef} setModalActive={setModalActive} />
+            </Modal>
+          </div>
+        </CalendarContext.Provider>
+
+        <div className="weight-paper-wrapper">
+          <WeightPaper />
         </div>
-      </CalendarContext.Provider>
-      <WeightPaper />
+      </div>
     </div>
   );
-}
+};
 
-export default Diary
+export default Diary;

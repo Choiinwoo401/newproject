@@ -1,0 +1,25 @@
+.diary-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+  }
+  
+  .header-wrapper {
+    flex: 0 0 auto;
+  }
+  
+  .content-wrapper {
+    flex: 1 1 auto;
+    display: flex;
+  }
+  
+  .calendar-wrapper {
+    flex: 1 1 0; /* Allow calendar to shrink to fit content */
+    max-width: 70%; /* Limit the maximum width of the calendar */
+    overflow: auto; /* Add scrollbars if the content exceeds the available space */
+  }
+  
+  .weight-paper-wrapper {
+    flex: 0 0 auto;
+    width: 300px; /* Adjust the width as needed */
+  }
