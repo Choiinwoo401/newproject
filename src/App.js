@@ -1,6 +1,7 @@
 import './App.css';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './screens/Home';
+import react, {useState} from 'react';
 import Information from './screens/Information';
 import NavbarElements from './components/Navbar/NavbarElements';
 import BallpythonMain from './information_project/ballpython/ballpythonMain';
@@ -19,18 +20,28 @@ import CommuPage from './component/Community/CommuPage';
 import QnAPage from './component/QnA/QnAPage';
 import LoginPage from './components/Login/LoginPage';
 import SignUpPage from './components/Login/SignUpPage';
+import NavbarElements2 from './components/Navbar/NavbarElements2';
 
 const App = () => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [username, setUsername] = useState('');
 
+  const handleLoginSuccess = (username) => {
+    setIsLoggedIn(true);
+    setUsername(username);
+  };
 
+  const handleLogout = () => {
+    setIsLoggedIn(false);
+    setUsername('');
+  };
   return (
 
     <Router>
-      <NavbarElements />
-      
+      {isLoggedIn ? <NavbarElements2 username={username} onLogout={handleLogout} /> : <NavbarElements />}
       <Routes>      
             <Route path = "/" element = { <Home /> }/>
-            <Route path = "/Login" element = { <LoginPage /> }/>
+            <Route path="/Login" element={<LoginPage onLoginSuccess={handleLoginSuccess}/>} />
             <Route path = "/SignUp" element = { <SignUpPage /> }/>
             <Route path = "/Information" element = { <Information /> }/>
             <Route path = "/Trade" element = { <TradePage /> }/>

@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import './Login.css'
+import './Login.css';
+import { useNavigate } from 'react-router-dom';
 
-const Login = () => {
+const Login = ({ onLoginSuccess }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const navigate = useNavigate();
 
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
@@ -25,15 +28,16 @@ const Login = () => {
     };
 
     // Make a POST request to the login API
-    axios.post('http://3.88.1.192:3000/api/login', data )
+    axios.post('http://3.88.1.192:3000/api/login', data)
       .then((response) => {
         // Handle successful login
         console.log(response.data);
         setError('');
-
+        setIsLoggedIn(true);
+        // Call onLoginSuccess function with username parameter
+        onLoginSuccess(email);
         // Redirect to home page
-        window.location.href = '/'; // Replace '/' with the actual home page URL
-
+        navigate('/');
         // Perform any other necessary actions
       })
       .catch((error) => {

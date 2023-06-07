@@ -14,9 +14,15 @@ function ToDoListItem({
   onToggle,
   onChangeSelectedTodo,
   onInsertToggle,
-  style
+  style,
 }) {
-  const { id, text, checked } = todo;
+  const { id, text, checked, year, month, day, value } = todo;
+
+  const formattedDate = `${year}-${month}-${day}`;
+
+  // Append 'g' to the value
+  const formattedValue = `${value}g`;
+
   return (
     <div className="TodoListItem-virtualized" style={style}>
       <li className="TodoListItem">
@@ -25,7 +31,7 @@ function ToDoListItem({
           onClick={() => onToggle(id)}
         >
           {checked ? <MdCheckBox /> : <MdCheckBoxOutlineBlank />}
-          <div className="text">{text}</div>
+          <div className="text">{formattedValue}</div> {/* Use formattedValue instead of text */}
         </div>
         <div
           className="edit"
@@ -39,9 +45,9 @@ function ToDoListItem({
         <div className="remove" onClick={() => onRemove(id)}>
           <MdRemoveCircleOutline />
         </div>
+        <div className="date">{formattedDate}</div> {/* Render the formatted date */}
       </li>
     </div>
   );
 }
-
 export default React.memo(ToDoListItem);

@@ -1,0 +1,10 @@
+.custom-button {
+    background-color: dark;
+    border-color: dark;
+  }
+  
+  .custom-button:hover {
+    background-color: dark;  /* Set the desired hover background color */
+    border-color: dark;  /* Set the desired hover border color */
+    color: #fff;  /* Set the desired hover text color */
+  }

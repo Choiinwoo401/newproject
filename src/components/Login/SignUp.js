@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import './SignUp.css'
+import { useNavigate } from 'react-router-dom';
+import './SignUp.css';
 
 const Signup = () => {
+  const navigate = useNavigate();
+
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -54,13 +57,14 @@ const Signup = () => {
     };
 
     // Make a POST request to the signup API
-    axios.post('http://3.88.1.192:3000/api/signup', data)
+    axios
+      .post('http://3.88.1.192:3000/api/signup', data)
       .then((response) => {
         // Handle successful signup
         console.log(response.data);
         setError('');
-        // Perform any necessary actions (e.g., redirect to dashboard)
-        window.location.href = '/'; 
+        // Perform any necessary actions (e.g., navigate to dashboard)
+        navigate('/');
       })
       .catch((error) => {
         // Handle signup error

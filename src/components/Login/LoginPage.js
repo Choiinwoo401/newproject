@@ -1,9 +1,9 @@
 import React from 'react'
 import Login from './Login'
 
-const LoginPage = () => {
+const LoginPage = ( {onLoginSuccess}) => {
   return (
-    <div><Login /></div>
+    <div><Login onLoginSuccess={onLoginSuccess} /></div>
   )
 }
 
