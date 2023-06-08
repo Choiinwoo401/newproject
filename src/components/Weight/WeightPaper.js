@@ -4,7 +4,7 @@ import ToDoInsert from './ToDoInsert';
 import ToDoTemplete from './ToDoTemplete';
 import ToDoEdit from './ToDoEdit';
 import WeightGraph from './WeightGraph';
-
+import './Weight.css'
 const WeightPaper = () => {
   const [todos, setTodos] = useState([
     {
@@ -81,8 +81,9 @@ const WeightPaper = () => {
       }, []);
     
     return (
-      <div>
+      <div className="WeightPaper">
       <ToDoTemplete>
+        <div className="content">
         <ToDoInsert onInsert={onInsert} />
         <TodoList
           todos={todos}
@@ -100,7 +101,10 @@ const WeightPaper = () => {
             insertToggle={insertToggle}
           />
         )}
-        <WeightGraph todos={todos} />
+        </div>
+        <div className="footer">
+          <WeightGraph todos={todos} />
+        </div>
       </ToDoTemplete>
     </div>
   )

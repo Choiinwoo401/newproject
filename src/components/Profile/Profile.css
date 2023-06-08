@@ -1,29 +1,37 @@
-
-.ddd {
-    width:400px;
-    height:150px;
-    border:1px solid;
-    padding : 5px;
-    border-radius:10%;
-    position: absoulte;
-}
-
-.dddlx {
-    height:40px;
-    line-height:20px;
-    display : block;
-    padding : 10px;
-    border: 1px solid;
-    margin-top:4px;
-    margin-bottom:4px;
-}
-
-.ddlx {
-    width:100px;
-    text-align:right;
-}
-
 .profileCheck {
-    position: absoulte;
-    transform: translate(35%,10%);
-}
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+  }
+  
+  .profile_img {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .image_check {
+    margin-right: 20px;
+  }
+  .profile-info {
+    margin-top: 20px;
+  }
+  
+  .profile-data {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+  }
+  
+  .profile-data h2 {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  
+  .profile-data p {
+    font-size: 14px;
+    margin-bottom: 5px;
+  }

@@ -1,92 +1,113 @@
-import React, { useState, useRef } from 'react'
-import Avatar from "react-avatar-edit";
-import { Button } from "primereact/button";
-import img from './profile.png';
+import React, { useState } from 'react';
+import { Button } from 'primereact/button';
 import Modal from '../Calendar/assets/images/Modal/Modal';
-import ProfilceChange from './ProfilceChange';
+import ProfileChange from './ProfileChange';
+import img from './profile.png';
+import './Profile.css';
 
 const Profileview = () => {
-  
-  const [dialogs, setdialogs]= useState(false);
-  const [imgCrop, setimgCrop] = useState(false);
-  const [storeImage, setstoreImage]= useState([]);
-  const [modalOpen, setmodalOpen] = useState(false);
-
-  const onClose = () =>{
-    setimgCrop(null);
-  };
-
-  const onCrop = (view) => {
-    setimgCrop(view);
-  };
-
-  const saveCropImage = () => {
-    setstoreImage([...storeImage,{imgCrop}])
-    setdialogs(false)
-  };
+  const [modalOpen, setModalOpen] = useState(false);
+  const [profileData, setProfileData] = useState(null);
+  const [storeImage, setStoreImage] = useState([]);
 
   const openModal = () => {
-    setmodalOpen(true);
-  };
-  const closeModal = () => {
-    setmodalOpen(false);
+    setModalOpen(true);
   };
 
-  const profileiamgeShow =  storeImage.map(item=>item.imgCrop);
+  const closeModal = () => {
+    setModalOpen(false);
+  };
+
+  const handleProfileSave = (data) => {
+    setProfileData(data);
+    if (data.imgCrop) {
+      setStoreImage([{ imgCrop: data.imgCrop }]);
+    }
+    closeModal();
+  };
+
+  const profileImageShow = storeImage.length ? storeImage[0].imgCrop : null;
 
   return (
-    <div className="profileCheck" >
-      <div className='profile_img text-center p-4' style={{display:'flex', margin:'0 auto'}}>
-        <div className="image_check"  >
-          <img
-            style={{
-              width: "150px",
-              height: "150px",
-              borderRadius:"50%",
-              objectFit : "cover",
-            }}
-            src = {profileiamgeShow.length? profileiamgeShow:img}
-            alt =""
-            onClick={openModal} 
-          />
-
-      <React.Fragment>
-          <Modal
-            open={modalOpen}
-            close={closeModal}
-            header = {() => (
-              <p htmlFor="" className="text-2xl font-semibold textColor">
-                update Profile
-              </p>
-            )}
-          >
-            <div className="confirmation-content flex flex-column align-items-center">
-              <div className=" flex felx-column align-items-center mt-5 w-12">
-                <div className="flex flex-column justify-content-around w-12 mt-4">
-                  <Avatar
-                    width={400}
-                    height={300}
-                    onClose={onClose}
-                    onCrop={onCrop}
-                  />
-                  <Button
-                    onClick={saveCropImage}
-                    label="Save"
-                    icon="pi pi-check"
-                  />
-                  
-                </div>  
-              </div>
+    <div className="profileCheck">
+      <div className="profile_img text-center p-4" style={{ display: 'flex', margin: '0 auto' }}>
+        <div className="image_check">
+          {profileImageShow ? (
+            <div>
+              <img
+                style={{
+                  width: '150px',
+                  height: '150px',
+                  borderRadius: '50%',
+                  objectFit: 'cover',
+                }}
+                src={profileImageShow}
+                alt=""
+                onClick={openModal}
+              />
             </div>
-          </Modal>
-          </React.Fragment>
+          ) : (
+            <div>
+              <img
+                style={{
+                  width: '150px',
+                  height: '150px',
+                  borderRadius: '50%',
+                  objectFit: 'cover',
+                }}
+                src={img}
+                alt=""
+                onClick={openModal}
+              />
+            </div>
+          )}
         </div>
-        
-      <ProfilceChange/>
+        <div className="profile-data">
+          {profileData ? (
+            <React.Fragment>
+              <p>
+                <strong>이름:</strong> {profileData.petName}
+              </p>
+              <p>
+                <strong>성별:</strong> {profileData.petSex}
+              </p>
+              <p>
+                <strong>입양일:</strong> {profileData.petBirth}
+              </p>
+            </React.Fragment>
+          ) : (
+            <React.Fragment>
+              <p>
+                <strong>이름:</strong> petname
+              </p>
+              <p>
+                <strong>성별:</strong> pet성별
+              </p>
+              <p>
+                <strong>입양일:</strong> 입양일
+              </p>
+            </React.Fragment>
+          )}
+        </div>
       </div>
-      
-    </div>
-  )
-}
 
-export default Profileview
+      <Button onClick={openModal} label="추가" className="add-button" />
+
+      {modalOpen && (
+        <Modal
+          open={modalOpen}
+          close={closeModal}
+          header={() => (
+            <p htmlFor="" className="text-2xl font-semibold textColor">
+              Update Profile
+            </p>
+          )}
+        >
+          <ProfileChange onProfileSave={handleProfileSave} onClose={closeModal} />
+        </Modal>
+      )}
+    </div>
+  );
+};
+
+export default Profileview;

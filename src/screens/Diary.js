@@ -1,5 +1,6 @@
 import React from 'react';
 import '../components/Calendar/styles/Diary.scss';
+import './Diary.css'
 import moment from 'moment/moment.js';
 import { useRef, useState } from 'react';
 import { updateMoment } from '../components/Calendar/utils/updateMoment.js';
