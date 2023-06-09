@@ -1,25 +1,35 @@
 .diary-container {
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-  }
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.header-wrapper {
+  flex: 0 0 auto;
+}
+.content-wrapper {
+  flex: 1 1 auto;
+  display: flex;
   
-  .header-wrapper {
-    flex: 0 0 auto;
-  }
+  justify-content: center;
+  align-items: center;
+}
+
+.calendar-wrapper {
+  flex: 0 0 auto;
+  max-width: 70%;
+  overflow: auto;
   
-  .content-wrapper {
-    flex: 1 1 auto;
-    display: flex;
-  }
+  justify-content: center;
+  align-items: center;
+}
+
+.weight-paper-wrapper {
+  flex: 0 0 auto;
+  width: 30%;
   
-  .calendar-wrapper {
-    flex: 1 1 0; /* Allow calendar to shrink to fit content */
-    max-width: 70%; /* Limit the maximum width of the calendar */
-    overflow: auto; /* Add scrollbars if the content exceeds the available space */
-  }
-  
-  .weight-paper-wrapper {
-    flex: 0 0 auto;
-    width: 300px; /* Adjust the width as needed */
-  }
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  margin-left: 20px; /* Adjust the margin as needed */
+}
