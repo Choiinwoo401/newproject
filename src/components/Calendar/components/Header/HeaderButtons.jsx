@@ -1,33 +1,26 @@
+import React, { useState, useContext } from 'react';
 import styles from './Header.module.scss';
 import stylesBtn from '../UI/ButtonMain/MainButton.module.scss';
 import MainButton from '../UI/ButtonMain/MainButton.jsx';
-import QuickPopup from '../UI/PopupQuick/QuickPopup.jsx';
-import { useContext } from 'react';
-import { CalendarContext } from '../../context/index.js';
+import Profileview from '../../../Profile/Profileview';
 
-const HeaderButtons = ({ quickActive, setQuickActive }) => {
-  const { setEvents } = useContext(CalendarContext);
 
-  const updateEvents = () => {
-    setEvents(JSON.parse(localStorage.getItem('events')));
-  };
+const HeaderButtons = ( ) => {
+ 
+  const [profileValues, setProfileValues] = useState(null);
 
-  const openQuickPopup = () => {
-    setQuickActive(true);
+
+  const getProfileValues = () => {
+    const profileData = Profileview.getProfileData(); // Get the profile data from the Profileview component
+    setProfileValues(profileData);
   };
 
   return (
     <div className={styles.buttons}>
-      <MainButton
-        className={quickActive ? [styles.button, stylesBtn.active].join(' ') : styles.button}
-        onClick={openQuickPopup}
-      >
-        추가
+
+      <MainButton className={styles.button} onClick={getProfileValues}>
+        펫 추가
       </MainButton>
-      <MainButton className={styles.button} onClick={updateEvents}>
-        새로 고침
-      </MainButton>
-      <QuickPopup active={quickActive} setActive={setQuickActive} />
     </div>
   );
 };
