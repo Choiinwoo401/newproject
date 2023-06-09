@@ -18,7 +18,6 @@ const NavbarElements = () => {
                         <Nav>
                             <Nav.Link href="/Login">로그인</Nav.Link>
                             <Nav.Link href="/SignUp">회원가입</Nav.Link>
-                            <Nav.Link href="/MyPage">마이페이지</Nav.Link>
                         </Nav>
                     </Navbar.Collapse>
                 </Container>

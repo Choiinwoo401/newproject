@@ -1,7 +1,8 @@
 import './App.css';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './screens/Home';
-import react, {useState} from 'react';
+import react from 'react';
 import Information from './screens/Information';
 import NavbarElements from './components/Navbar/NavbarElements';
 import BallpythonMain from './information_project/ballpython/ballpythonMain';
@@ -21,10 +22,23 @@ import QnAPage from './component/QnA/QnAPage';
 import LoginPage from './components/Login/LoginPage';
 import SignUpPage from './components/Login/SignUpPage';
 import NavbarElements2 from './components/Navbar/NavbarElements2';
+import Cookies from 'js-cookie';
 
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [username, setUsername] = useState('');
+  const [authToken, setAuthToken] = useState('');
+
+  useEffect(() => {
+    const authTokenCookie = Cookies.get('authToken');
+    const usernameCookie = Cookies.get('username');
+
+    if (authTokenCookie && usernameCookie) {
+      setAuthToken(authTokenCookie);
+      setUsername(usernameCookie);
+      setIsLoggedIn(true);
+    }
+  }, []);
 
   const handleLoginSuccess = (username) => {
     setIsLoggedIn(true);
@@ -34,12 +48,19 @@ const App = () => {
   const handleLogout = () => {
     setIsLoggedIn(false);
     setUsername('');
+    setAuthToken('');
+    Cookies.remove('authToken');
+    Cookies.remove('username');
   };
-  return (
 
+  return (
     <Router>
-      {isLoggedIn ? <NavbarElements2 username={username} onLogout={handleLogout} /> : <NavbarElements />}
-      <Routes>      
+      {isLoggedIn ? (
+        <NavbarElements2 username={username} onLogout={handleLogout} />
+      ) : (
+        <NavbarElements />
+      )}
+          <Routes>      
             <Route path = "/" element = { <Home /> }/>
             <Route path="/Login" element={<LoginPage onLoginSuccess={handleLoginSuccess}/>} />
             <Route path = "/SignUp" element = { <SignUpPage /> }/>

@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import './Login.css';
 import { useNavigate } from 'react-router-dom';
+import Cookies from 'js-cookie';
 
 const Login = ({ onLoginSuccess }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const navigate = useNavigate();
 
   const handleEmailChange = (e) => {
@@ -28,17 +28,20 @@ const Login = ({ onLoginSuccess }) => {
     };
 
     // Make a POST request to the login API
-    axios.post('http://3.88.1.192:3000/api/login', data)
+    axios
+      .post('http://3.88.1.192:3000/api/login', data)
       .then((response) => {
         // Handle successful login
-        console.log(response.data);
+        const authToken = response.data.authToken;
+        const username = response.headers['set-cookie'];
         setError('');
-        setIsLoggedIn(true);
+        // Set the authentication token and username in cookies
+        Cookies.set('authToken', authToken);
+        Cookies.set('username', username);
         // Call onLoginSuccess function with username parameter
-        onLoginSuccess(email);
+        onLoginSuccess(username);
         // Redirect to home page
         navigate('/');
-        // Perform any other necessary actions
       })
       .catch((error) => {
         // Handle login error

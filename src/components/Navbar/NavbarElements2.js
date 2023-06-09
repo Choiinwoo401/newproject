@@ -1,16 +1,19 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Navbar, Container, Nav } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
-import './Navbar.css'
+import './Navbar.css';
+import Cookies from 'js-cookie';
 
 const NavbarElements2 = ({ username, onLogout }) => {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
-    const handleLogout = () => {
-      onLogout(); // Call the onLogout function passed from the parent component
-      localStorage.removeItem('userToken');
-      navigate('/'); // Navigate to the home page
-    };
+  const handleLogout = () => {
+    onLogout(); // Call the onLogout function passed from the parent component
+    Cookies.remove('authToken'); // Remove the authToken cookie
+    Cookies.remove('username'); // Remove the username cookie
+    navigate('/'); // Navigate to the home page
+  };
+
   return (
     <div>
       <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
@@ -25,8 +28,10 @@ const NavbarElements2 = ({ username, onLogout }) => {
               <Nav.Link href="/QnA">QnA</Nav.Link>
             </Nav>
             <Nav>
-                <span className="user-name">{username}</span>            
-                <Nav.Link onClick={handleLogout} className="logout-link">로그아웃 </Nav.Link>
+              <span className="user-name">{username}</span>
+              <Nav.Link onClick={handleLogout} className="logout-link">
+                로그아웃
+              </Nav.Link>
               <Nav.Link href="/MyPage">마이페이지</Nav.Link>
             </Nav>
           </Navbar.Collapse>

@@ -8,3 +8,7 @@
     border-color: dark;  /* Set the desired hover border color */
     color: #fff;  /* Set the desired hover text color */
   }
+
+  .user-name {
+    color:white; 
+  }
