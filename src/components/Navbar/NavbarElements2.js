@@ -18,21 +18,21 @@ const NavbarElements2 = ({ username, onLogout }) => {
     <div>
       <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
         <Container>
-          <Navbar.Brand href="/">RIQ</Navbar.Brand>
+          <Navbar.Brand as={Link} to="/">RIQ</Navbar.Brand>
           <Navbar.Toggle aria-controls="responsive-navbar-nav" />
           <Navbar.Collapse id="responsive-navbar-nav">
             <Nav className="me-auto">
-              <Nav.Link href="/Information">정보</Nav.Link>
-              <Nav.Link href="/Trade">거래</Nav.Link>
-              <Nav.Link href="/Community">커뮤니티</Nav.Link>
-              <Nav.Link href="/QnA">QnA</Nav.Link>
+              <Nav.Link as={Link} to="/Information">정보</Nav.Link>
+              <Nav.Link as={Link} to="/Trade">거래</Nav.Link>
+              <Nav.Link as={Link} to="/Community">커뮤니티</Nav.Link>
+              <Nav.Link as={Link} to="/QnA">QnA {username}</Nav.Link>
             </Nav>
             <Nav>
               <span className="user-name">{username}</span>
               <Nav.Link onClick={handleLogout} className="logout-link">
                 로그아웃
               </Nav.Link>
-              <Nav.Link href="/MyPage">마이페이지</Nav.Link>
+              <Nav.Link as={Link} to="/MyPage">마이페이지</Nav.Link>
             </Nav>
           </Navbar.Collapse>
         </Container>

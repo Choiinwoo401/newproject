@@ -19,36 +19,50 @@ import TradePage from './component/Trade/TradePage';
 import TradeMain from './component/Trade/TradeMain';
 import CommuPage from './component/Community/CommuPage';
 import QnAPage from './component/QnA/QnAPage';
-import LoginPage from './components/Login/LoginPage';
 import SignUpPage from './components/Login/SignUpPage';
 import NavbarElements2 from './components/Navbar/NavbarElements2';
 import Cookies from 'js-cookie';
+import Login from './components/Login/Login';
 
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [username, setUsername] = useState('');
   const [authToken, setAuthToken] = useState('');
-
+  
   useEffect(() => {
-    const authTokenCookie = Cookies.get('authToken');
     const usernameCookie = Cookies.get('username');
-
-    if (authTokenCookie && usernameCookie) {
-      setAuthToken(authTokenCookie);
-      setUsername(usernameCookie);
+  
+    if (usernameCookie) {
+  
+      // Extract the username from the cookie value
+      const username = extractUsernameFromCookie(usernameCookie);
+      setUsername(username);
       setIsLoggedIn(true);
+      console.log('Username cookie:',username);
+      console.log('Username cookie:',usernameCookie);
     }
   }, []);
+  
+  const extractUsernameFromCookie = (cookieValue) => {
+   const parts = cookieValue.split('=');
+    if (parts.length === 2) {
+      return parts[1];
+    }
+    return ''; // Return an empty string if extraction fails
+  };
 
   const handleLoginSuccess = (username) => {
     setIsLoggedIn(true);
     setUsername(username);
+  
+    // Set the authentication token and username in cookies
+    Cookies.set('authToken', authToken, { expires: 7 }); // Expires in 7 days
+    Cookies.set('username', username, { expires: 7 }); // Expires in 7 days
   };
 
   const handleLogout = () => {
     setIsLoggedIn(false);
     setUsername('');
-    setAuthToken('');
     Cookies.remove('authToken');
     Cookies.remove('username');
   };
@@ -62,7 +76,7 @@ const App = () => {
       )}
           <Routes>      
             <Route path = "/" element = { <Home /> }/>
-            <Route path="/Login" element={<LoginPage onLoginSuccess={handleLoginSuccess}/>} />
+            <Route path="/Login" element={<Login onLoginSuccess={handleLoginSuccess} />} />
             <Route path = "/SignUp" element = { <SignUpPage /> }/>
             <Route path = "/Information" element = { <Information /> }/>
             <Route path = "/Trade" element = { <TradePage /> }/>
@@ -71,7 +85,7 @@ const App = () => {
             <Route path = "/QnA/QnAPage" element = { <QnAPage /> }/>
             <Route path = "/Community" element = { <CommuMain /> }/>
             <Route path = "/Community/CommuPage" element = { <CommuPage /> }/>
-            <Route path = "/MyPage" element = { <Diary /> }/>
+            <Route path = "/MyPage" element = { <Diary username={username} /> }/>
             <Route path = "/Information/BallpythonMain" element = { <BallpythonMain /> }/>
             <Route path = "/Information/BallpythonMain/BallpythonAdoption" element = { <BallpythonAdoption /> }/>
             <Route path = "/Information/BallpythonMain/BallpythonAfter" element = { <BallpythonAfter /> }/>

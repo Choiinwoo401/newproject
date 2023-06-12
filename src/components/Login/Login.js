@@ -5,13 +5,13 @@ import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
 
 const Login = ({ onLoginSuccess }) => {
-  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  const handleEmailChange = (e) => {
-    setEmail(e.target.value);
+  const handleUserChange = (e) => {
+    setUsername(e.target.value);
   };
 
   const handlePasswordChange = (e) => {
@@ -20,28 +20,32 @@ const Login = ({ onLoginSuccess }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    // Create an object with the email and password
+  
     const data = {
-      username: email,
+      username: username,
       password: password
     };
-
+  
     // Make a POST request to the login API
     axios
       .post('http://3.88.1.192:3000/api/login', data)
       .then((response) => {
         // Handle successful login
         const authToken = response.data.authToken;
-        const username = response.headers['set-cookie'];
+        const username = response.data.user; // Get the username from the response data
+  
         setError('');
-        // Set the authentication token and username in cookies
-        Cookies.set('authToken', authToken);
-        Cookies.set('username', username);
+        console.log('response : ', username)
         // Call onLoginSuccess function with username parameter
         onLoginSuccess(username);
+  
+        // Set the authentication token and username in cookies
+        Cookies.set('authToken', authToken, { expires: 7 }); // Expires in 7 days
+        Cookies.set('username', username, { expires: 7 }); // Expires in 7 days
+  
         // Redirect to home page
         navigate('/');
+        console.log('username:', {username});
       })
       .catch((error) => {
         // Handle login error
@@ -59,7 +63,7 @@ const Login = ({ onLoginSuccess }) => {
       <form onSubmit={handleSubmit}>
         <div>
           <label>아이디:</label>
-          <input type="text" value={email} onChange={handleEmailChange} />
+          <input type="text" value={username} onChange={handleUserChange} />
         </div>
         <div>
           <label>비밀번호:</label>

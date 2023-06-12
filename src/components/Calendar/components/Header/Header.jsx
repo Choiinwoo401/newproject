@@ -4,10 +4,10 @@ import HeaderButtons from './HeaderButtons.jsx';
 import HeaderSearch from './HeaderSearch.jsx';
 import Profileview from '../../../Profile/Profileview';
 
-const Header = ({ quickActive, setQuickActive, searchActive, setSearchActive }) => {
+const Header = ({ username, quickActive, setQuickActive, searchActive, setSearchActive }) => {
   return (
     <header className={styles.header}>
-      <Profileview />
+      <Profileview username={username} />
       <div className={[styles.container, 'container'].join(' ')}>
         <div className={styles.control}>
           <HeaderSearch searchActive={searchActive} setSearchActive={setSearchActive} />

@@ -12,7 +12,7 @@ import ViewPopup from '../components/Calendar/components/UI/PopupView/ViewPopup.
 import { CalendarContext } from '../components/Calendar/context/index.js';
 import WeightPaper from '../components/Weight/WeightPaper';
 
-const Diary = () => {
+const Diary = (username) => {
   const [modalActive, setModalActive] = useState(false);
   const [quickActive, setQuickActive] = useState(false);
   const [searchActive, setSearchActive] = useState(false);
@@ -29,6 +29,7 @@ const Diary = () => {
     <div className="diary-container">
       <div className="header-wrapper">
         <Header
+          username={username}
           quickActive={quickActive}
           setQuickActive={setQuickActive}
           searchActive={searchActive}
@@ -69,7 +70,7 @@ const Diary = () => {
         </CalendarContext.Provider>
 
         <div className="weight-paper-wrapper">
-          <WeightPaper />
+          <WeightPaper username={username} />
         </div>
       </div>
     </div>

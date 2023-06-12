@@ -5,7 +5,7 @@ import ToDoTemplete from './ToDoTemplete';
 import ToDoEdit from './ToDoEdit';
 import WeightGraph from './WeightGraph';
 import './Weight.css'
-const WeightPaper = () => {
+const WeightPaper = (username) => {
   const [todos, setTodos] = useState([
     {
       id: 1,
