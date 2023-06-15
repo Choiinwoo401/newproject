@@ -2,15 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { Button } from 'primereact/button';
 import Modal from '../Calendar/assets/images/Modal/Modal';
 import ProfileChange from './ProfileChange';
-import img from './profile.png';
+import profileImg from './profile.png';
 import './Profile.css';
 import axios from 'axios';
-
+import ProfileAdd from './ProfileAdd';
 const ProfileView = ({ username }) => {
   const [modalOpen, setModalOpen] = useState(false);
-  const [profileData, setProfileData] = useState([]);
+  const [profileData, setProfileData] = useState(null);
   const [currentProfileIndex, setCurrentProfileIndex] = useState(0);
-  const [currentProfileImage, setCurrentProfileImage] = useState(img);
+  const [currentProfileImage, setCurrentProfileImage] = useState(profileImg);
   const [animalName, setAnimalName] = useState('');
   const [sex, setSex] = useState('');
   const [birth, setBirth] = useState('');
@@ -20,31 +20,37 @@ const ProfileView = ({ username }) => {
 
   const handleImageClick = (image) => {
     setSelectedImage(image);
-    setModalOpen(true);
+    setOpenImagePopup(true);
   };
+
+  useEffect(() => {
+    if (imgCrop) {
+      const blob = new Blob([imgCrop], { type: 'image/png' });
+      const imageUrl = URL.createObjectURL(blob);
+      setCurrentProfileImage(imageUrl);
+    } else {
+      setCurrentProfileImage(profileImg);
+    }
+  }, [imgCrop]);
 
   useEffect(() => {
     axios
       .get(`http://3.88.1.192:3000/api/diary/animal?user_id=${username}`)
       .then((response) => {
-        const { name, sex, birth, imgCrop } = response.data;
+        const animalData = response.data;
+        console.log();
+          setProfileData(animalData);
+          setCurrentProfileIndex(0);
+          setAnimalName(animalData.name || '');
+          setSex(animalData.sex || '');
+          setBirth(animalData.birth || '');
+          setImgCrop(animalData.imgCrop || '');
 
-        setProfileData(response.data);
-        setCurrentProfileIndex(0);
-        setCurrentProfileImage(response.data[0]?.images || img);
-        setAnimalName(name);
-        setSex(sex);
-        setBirth(birth);
-        setImgCrop(imgCrop);
       })
       .catch((error) => {
         console.error(error);
       });
   }, [username]);
-
-  useEffect(() => {
-    console.log(Object.keys(profileData).length);
-  }, [profileData]);
 
   const openModal = () => {
     setModalOpen(true);
@@ -52,7 +58,6 @@ const ProfileView = ({ username }) => {
 
   const closeModal = () => {
     setModalOpen(false);
-    setSelectedImage(''); // 선택된 이미지 초기화
   };
 
   const handleProfileSave = (data) => {
@@ -63,68 +68,80 @@ const ProfileView = ({ username }) => {
       updatedProfileData[index] = data;
       setProfileData(updatedProfileData);
       setCurrentProfileIndex(index);
-      setCurrentProfileImage(data.images || img);
-      setAnimalName(data.name || '');
+      setAnimalName(data.animal_name || '');
       setSex(data.sex || '');
       setBirth(data.birth || '');
+      setImgCrop(data.imgCrop || '');
       closeModal();
     }
   };
 
   const handleProfileClick = (index) => {
     setCurrentProfileIndex(index);
-    setCurrentProfileImage(profileData[index]?.images || img);
     setAnimalName(profileData[index]?.name || '');
     setSex(profileData[index]?.sex || '');
     setBirth(profileData[index]?.birth || '');
     setImgCrop(profileData[index]?.imgCrop || '');
   };
 
-  const currentProfile =
-    Object.keys(profileData).length > 0 ? profileData[currentProfileIndex] : null;
-
   return (
-    <div className="profileCheck">
-      <div className="profileContainer">
-        <div
-          className="profile_img text-center p-4"
-          style={{ display: 'flex', margin: '0 auto' }}
-        >
-          <div className="image_check">
-            <img
-              style={{
-                width: '150px',
-                height: '150px',
-                borderRadius: '50%',
-                objectFit: 'cover',
-              }} 
-              src={currentProfileImage}
-              alt=""
-              onClick={() => handleImageClick(currentProfileImage)}
-            />
-          </div>
-          <div className="profile-data">
-            <p>
-              <strong>이름: </strong> {animalName}
-            </p>
-            <p>
-              <strong>성별:</strong> {sex}
-            </p>
-            <p>
-              <strong>입양일:</strong> {birth}
-            </p>
-          </div>
-        </div>
-      </div>
+    <div className="profile-container">
+      <h2>프로필</h2>
 
-      {Object.keys(profileData).length > 1 && (
+      {profileData !== null ? (
+        <>
+          {Object.keys(profileData).length === 0 ? (
+            <p>프로필 데이터가 없습니다.</p>
+          ) : (
+            <div className="profile-view">
+            <div
+              className="profile_img text-center p-4"
+              style={{ display: 'flex', margin: '0 auto' }}
+            >
+              <div className="image_check">
+                <img
+                  style={{
+                    width: '150px',
+                    height: '150px',
+                    borderRadius: '50%',
+                    objectFit: 'cover',
+                  }}
+                  src={currentProfileImage}
+                  alt=""
+                  onClick={() => handleImageClick(currentProfileImage)}
+                />
+              </div>
+              <div className="profile-data">
+                {currentProfileIndex !== null && profileData && profileData.length > currentProfileIndex ? (
+                  <>
+                    <p>
+                      <strong>이름:</strong> {animalName}
+                    </p>
+                    <p>
+                      <strong>성별:</strong> {sex}
+                    </p>
+                    <p>
+                      <strong>입양일:</strong> {birth}
+                    </p>
+                  </>
+                ) : (
+                  <p>프로필 정보를 불러오는 중입니다...</p>
+                )}
+              </div>
+            </div>
+          </div>
+          )}
+        </>
+      ) : (
+        <p>프로필 데이터를 불러오는 중입니다...</p>
+      )}
+
+      {profileData && Object.keys(profileData).length > 1 && (
         <div className="profile-switch">
-          {Object.keys(profileData).map((profileKey, index) => (
+          {Object.values(profileData).map((profile, index) => (
             <div
               key={index}
-              className={`profile-switch-item ${
-                index === currentProfileIndex ? 'active' : ''
-              }`}
+              className={`profile-switch-item ${index === currentProfileIndex ? 'active' : ''}`}
               onClick={() => handleProfileClick(index)}
             >
               <img
@@ -134,11 +151,11 @@ const ProfileView = ({ username }) => {
                   borderRadius: '50%',
                   objectFit: 'cover',
                 }}
-                src={profileData[profileKey]?.images || img}
+                src={profile.imgCrop || profileImg}
                 alt=""
                 onClick={() => handleProfileClick(index)}
               />
-              <p>{profileData[profileKey]?.name}</p>
+              <p>{profile.name}</p>
             </div>
           ))}
         </div>
@@ -152,7 +169,7 @@ const ProfileView = ({ username }) => {
           close={closeModal}
           header={<p className="text-2xl font-semibold textColor">프로필 추가</p>}
         >
-          <ProfileChange
+          <ProfileAdd
             onProfileSave={handleProfileSave}
             onClose={closeModal}
             user_id={username}
