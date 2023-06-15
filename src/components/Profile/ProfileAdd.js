@@ -3,10 +3,10 @@ import { Button } from 'primereact/button';
 import Avatar from 'react-avatar-edit';
 import axios from 'axios';
 
-const ProfileChange = ({ onProfileSave, onClose, user_id, animal_name, sex, birth }) => {
-  const [petName, setPetName] = useState(animal_name || ''); // Initialize with an empty string
-  const [petSex, setPetSex] = useState(sex || ''); // Initialize with an empty string
-  const [petBirth, setPetBirth] = useState(birth || ''); // Initialize with an empty string
+const ProfileAdd = ({ onProfileSave, onClose, user_id }) => {
+  const [petName, setPetName] = useState('');
+  const [petSex, setPetSex] = useState('');
+  const [petBirth, setPetBirth] = useState('');
   const [imgCrop, setImgCrop] = useState(null);
 
   const handleUpdateButtonClick = () => {
@@ -15,10 +15,9 @@ const ProfileChange = ({ onProfileSave, onClose, user_id, animal_name, sex, birt
       animal_name: petName,
       sex: petSex,
       birth: petBirth,
-      imgCrop,
+      images: imgCrop,
     };
-    
-    // Send the profile data to the server
+
     axios
       .post(`http://3.88.1.192:3000/api/diary/animal?user_id=${user_id}`, profileData)
       .then((response) => {
@@ -27,7 +26,6 @@ const ProfileChange = ({ onProfileSave, onClose, user_id, animal_name, sex, birt
         onClose();
       })
       .catch((error) => {
-        // Handle errors
         console.error(error);
       });
   };
@@ -44,7 +42,6 @@ const ProfileChange = ({ onProfileSave, onClose, user_id, animal_name, sex, birt
     setImgCrop(view);
   };
 
-  // Add 'willReadFrequently' attribute to the canvas element
   const canvasProps = {
     canvas: {
       width: 200,
@@ -84,4 +81,4 @@ const ProfileChange = ({ onProfileSave, onClose, user_id, animal_name, sex, birt
   );
 };
 
-export default ProfileChange;
+export default ProfileAdd;

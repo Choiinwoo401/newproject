@@ -12,7 +12,7 @@ import ViewPopup from '../components/Calendar/components/UI/PopupView/ViewPopup.
 import { CalendarContext } from '../components/Calendar/context/index.js';
 import WeightPaper from '../components/Weight/WeightPaper';
 
-const Diary = (username) => {
+const Diary = ({username}) => {
   const [modalActive, setModalActive] = useState(false);
   const [quickActive, setQuickActive] = useState(false);
   const [searchActive, setSearchActive] = useState(false);
@@ -24,7 +24,6 @@ const Diary = (username) => {
   );
   const [date, setDate] = useState(updateMoment(moment));
   const [days, setDays] = useState([]);
-
   return (
     <div className="diary-container">
       <div className="header-wrapper">

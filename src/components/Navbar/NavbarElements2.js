@@ -32,7 +32,9 @@ const NavbarElements2 = ({ username, onLogout }) => {
               <Nav.Link onClick={handleLogout} className="logout-link">
                 로그아웃
               </Nav.Link>
-              <Nav.Link as={Link} to="/MyPage">마이페이지</Nav.Link>
+              <Nav.Link as={Link} to={{ pathname: '/MyPage', state: { username: username } }}>
+                마이페이지
+              </Nav.Link>
             </Nav>
           </Navbar.Collapse>
         </Container>

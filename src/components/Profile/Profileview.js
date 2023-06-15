@@ -6,110 +6,143 @@ import img from './profile.png';
 import './Profile.css';
 import axios from 'axios';
 
-const Profileview = (props) => {
-  const { username } = props;
+const ProfileView = ({ username }) => {
   const [modalOpen, setModalOpen] = useState(false);
-  const [profileData, setProfileData] = useState(null);
-  const [storeImage, setStoreImage] = useState([]);
-  const [id, setId] = useState('');
-  const [animal_name, setAnimalName] = useState('');
+  const [profileData, setProfileData] = useState([]);
+  const [currentProfileIndex, setCurrentProfileIndex] = useState(0);
+  const [currentProfileImage, setCurrentProfileImage] = useState(img);
+  const [animalName, setAnimalName] = useState('');
   const [sex, setSex] = useState('');
   const [birth, setBirth] = useState('');
+  const [imgCrop, setImgCrop] = useState('');
+  const [openImagePopup, setOpenImagePopup] = useState(false);
+  const [selectedImage, setSelectedImage] = useState('');
+
+  const handleImageClick = (image) => {
+    setSelectedImage(image);
+    setModalOpen(true);
+  };
 
   useEffect(() => {
     axios
       .get(`http://3.88.1.192:3000/api/diary/animal?user_id=${username}`)
       .then((response) => {
-        const { id, animal_name, sex, birth } = response.data;
+        const { name, sex, birth, imgCrop } = response.data;
+
         setProfileData(response.data);
-        setId(id);
-        setAnimalName(animal_name);
+        setCurrentProfileIndex(0);
+        setCurrentProfileImage(response.data[0]?.images || img);
+        setAnimalName(name);
         setSex(sex);
         setBirth(birth);
+        setImgCrop(imgCrop);
       })
       .catch((error) => {
         console.error(error);
       });
   }, [username]);
+
+  useEffect(() => {
+    console.log(Object.keys(profileData).length);
+  }, [profileData]);
+
   const openModal = () => {
     setModalOpen(true);
   };
 
   const closeModal = () => {
     setModalOpen(false);
+    setSelectedImage(''); // 선택된 이미지 초기화
   };
 
   const handleProfileSave = (data) => {
-    setProfileData(data);
-    if (data.imgCrop) {
-      setStoreImage([{ imgCrop: data.imgCrop }]);
+    const updatedProfileData = [...profileData];
+    const index = updatedProfileData.findIndex((profile) => profile.user_id === data.user_id);
+
+    if (index !== -1) {
+      updatedProfileData[index] = data;
+      setProfileData(updatedProfileData);
+      setCurrentProfileIndex(index);
+      setCurrentProfileImage(data.images || img);
+      setAnimalName(data.name || '');
+      setSex(data.sex || '');
+      setBirth(data.birth || '');
+      closeModal();
     }
-    closeModal();
   };
-  const profileImageShow = storeImage.length ? storeImage[0].imgCrop : null;
+
+  const handleProfileClick = (index) => {
+    setCurrentProfileIndex(index);
+    setCurrentProfileImage(profileData[index]?.images || img);
+    setAnimalName(profileData[index]?.name || '');
+    setSex(profileData[index]?.sex || '');
+    setBirth(profileData[index]?.birth || '');
+    setImgCrop(profileData[index]?.imgCrop || '');
+  };
+
+  const currentProfile =
+    Object.keys(profileData).length > 0 ? profileData[currentProfileIndex] : null;
 
   return (
     <div className="profileCheck">
-      <div className="profile_img text-center p-4" style={{ display: 'flex', margin: '0 auto' }}>
-        <div className="image_check">
-          {profileImageShow ? (
-            <div>
-              <img
-                style={{
-                  width: '150px',
-                  height: '150px',
-                  borderRadius: '50%',
-                  objectFit: 'cover',
-                }}
-                src={profileImageShow}
-                alt=""
-                onClick={openModal}
-              />
-            </div>
-          ) : (
-            <div>
-              <img
-                style={{
-                  width: '150px',
-                  height: '150px',
-                  borderRadius: '50%',
-                  objectFit: 'cover',
-                }}
-                src={img}
-                alt=""
-                onClick={openModal}
-              />
-            </div>
-          )}
-        </div>
-        <div className="profile-data">
-          {profileData ? (
-            <React.Fragment>
-              <p>
-                <strong>이름:</strong> {profileData.name}
-              </p>
-              <p>
-                <strong>성별:</strong> {profileData.user_id}
-              </p>
-              <p>
-                <strong>입양일:</strong> {profileData.birth}
-              </p>
-            </React.Fragment>
-          ) : (
-            <React.Fragment>
-              <p>
-                <strong>이름:</strong> petname
-              </p>
-              <p>
-                <strong>성별:</strong> pet성별
-              </p>
-              <p>
-                <strong>입양일:</strong> 입양일
-              </p>
-            </React.Fragment>
-          )}
+      <div className="profileContainer">
+        <div
+          className="profile_img text-center p-4"
+          style={{ display: 'flex', margin: '0 auto' }}
+        >
+          <div className="image_check">
+            <img
+              style={{
+                width: '150px',
+                height: '150px',
+                borderRadius: '50%',
+                objectFit: 'cover',
+              }} 
+              src={currentProfileImage}
+              alt=""
+              onClick={() => handleImageClick(currentProfileImage)}
+            />
+          </div>
+          <div className="profile-data">
+            <p>
+              <strong>이름: </strong> {animalName}
+            </p>
+            <p>
+              <strong>성별:</strong> {sex}
+            </p>
+            <p>
+              <strong>입양일:</strong> {birth}
+            </p>
+          </div>
         </div>
       </div>
+
+      {Object.keys(profileData).length > 1 && (
+        <div className="profile-switch">
+          {Object.keys(profileData).map((profileKey, index) => (
+            <div
+              key={index}
+              className={`profile-switch-item ${
+                index === currentProfileIndex ? 'active' : ''
+              }`}
+              onClick={() => handleProfileClick(index)}
+            >
+              <img
+                style={{
+                  width: '50px',
+                  height: '50px',
+                  borderRadius: '50%',
+                  objectFit: 'cover',
+                }}
+                src={profileData[profileKey]?.images || img}
+                alt=""
+                onClick={() => handleProfileClick(index)}
+              />
+              <p>{profileData[profileKey]?.name}</p>
+            </div>
+          ))}
+        </div>
+      )}
 
       <Button onClick={openModal} label="추가" className="add-button" />
 
@@ -117,24 +150,21 @@ const Profileview = (props) => {
         <Modal
           open={modalOpen}
           close={closeModal}
-          header={
-            <p className="text-2xl font-semibold textColor">
-              Update Profile
-            </p>
-          }
+          header={<p className="text-2xl font-semibold textColor">프로필 추가</p>}
         >
-        <ProfileChange
-          onProfileSave={handleProfileSave}
-          onClose={closeModal}
-          id={username}
-          animal_name={profileData.animal_name}
-          sex={profileData.sex}
-          birth={profileData.birth}
-        />
+          <ProfileChange
+            onProfileSave={handleProfileSave}
+            onClose={closeModal}
+            user_id={username}
+            animal_name={animalName}
+            sex={sex}
+            birth={birth}
+            imgCrop={imgCrop}
+          />
         </Modal>
       )}
     </div>
   );
 };
 
-export default Profileview;
+export default ProfileView;

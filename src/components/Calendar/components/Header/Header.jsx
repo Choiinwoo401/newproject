@@ -5,6 +5,7 @@ import HeaderSearch from './HeaderSearch.jsx';
 import Profileview from '../../../Profile/Profileview';
 
 const Header = ({ username, quickActive, setQuickActive, searchActive, setSearchActive }) => {
+
   return (
     <header className={styles.header}>
       <Profileview username={username} />
